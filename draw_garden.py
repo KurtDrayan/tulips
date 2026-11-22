@@ -42,7 +42,7 @@ def bloom(x,y,s,color):
 
 pink=('#ffd0d9','#f1a3b8','#d77b99')
 yellow=('#fff0aa','#f5ce70','#dfa84c')
-flowers=[(-217,120,.88,pink),(-152,205,1.0,yellow),(-75,250,1.05,pink),(0,275,1.15,yellow),(75,250,1.05,pink),(152,205,1.0,yellow),(217,120,.88,pink),(-112,105,1.02,pink),(0,145,1.08,pink),(112,105,1.02,yellow)]
+flowers=[(-217,120,.88,pink),(-152,205,1.0,yellow),(-75,250,1.05,pink),(0,275,1.15,yellow),(75,250,1.05,pink),(152,205,1.0,yellow),(217,120,.88,pink),(-185,45,.95,yellow),(-112,105,1.02,pink),(-55,70,.95,yellow),(0,145,1.08,pink),(55,70,.95,pink),(112,105,1.02,yellow),(185,45,.95,pink)]
 # Draw each stem and foliage before drawing the flower heads.
 for x,y,s,c in flowers:
     t.pencolor('#678660'); t.pensize(4); move(0,-335)
@@ -76,13 +76,13 @@ svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="-360 -425 720 850" role="
 svg.append('<style>polyline{stroke-dasharray:1;stroke-dashoffset:1}polygon{opacity:0}@media(prefers-reduced-motion:reduce){polyline{stroke-dashoffset:0!important;animation:none!important}polygon{opacity:1!important;animation:none!important}}</style>')
 count=len(items)
 for i,item in enumerate(items):
-    start=round(2+i/count*68,3); end=round(min(start+3,74),3)
+    start=round(1+i/count*40,3); end=round(min(start+3,44),3)
     name=f'p{i}'
     if item.startswith('<polyline'):
-        svg.append(f'<style>@keyframes {name}{{0%,{start}%{{stroke-dashoffset:1;opacity:0}}{end}%,86%{{stroke-dashoffset:0;opacity:1}}96%,100%{{stroke-dashoffset:0;opacity:0}}}}</style>')
+        svg.append(f'<style>@keyframes {name}{{0%,{start}%{{stroke-dashoffset:1;opacity:0}}{end}%,92%{{stroke-dashoffset:0;opacity:1}}100%{{stroke-dashoffset:0;opacity:1}}}}</style>')
     else:
-        svg.append(f'<style>@keyframes {name}{{0%,{start}%{{opacity:0}}{end}%,86%{{opacity:1}}96%,100%{{opacity:0}}}}</style>')
-    svg.append(item.replace(' points=',f' style="animation:{name} 20s linear infinite" points=',1))
+        svg.append(f'<style>@keyframes {name}{{0%,{start}%{{opacity:0}}{end}%,92%,100%{{opacity:1}}}}</style>')
+    svg.append(item.replace(' points=',f' style="animation:{name} 14s linear infinite" points=',1))
 svg.append('</svg>')
 Path(__file__).with_name('turtle-bouquet.svg').write_text('\n'.join(svg),encoding='utf-8')
 screen.bye()
