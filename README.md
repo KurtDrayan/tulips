@@ -14,3 +14,7 @@ Edit `messages.json`: change `appreciation` for the scrolling note and `letter` 
 4. Choose **main** and **/(root)**, then click **Save**.
 5. Wait for deployment; refresh the Pages settings page and open the URL shown there. The expected URL is `https://kurtdrayan.github.io/tulips/`, but use the URL displayed by GitHub as the authoritative address.
 6. For future message changes, regenerate and push the updated files; GitHub Pages will redeploy automatically.
+
+## Turtle drawing
+
+`draw_garden.py` uses Python's Turtle and Tkinter to draw the tulips and export `turtle-garden.svg`. Run `python draw_garden.py` on a computer with a graphical desktop to regenerate it. The exported SVG animates the drawing in the browser, so visitors don't need Python. Reduced-motion preferences show the completed drawing immediately.
