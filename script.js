@@ -7,7 +7,7 @@ dialog.addEventListener('click', event => { if (event.target === dialog) dialog.
 const canvas = document.querySelector('.fireworks');
 const ctx = canvas.getContext('2d');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
-let width, height, rockets = [], sparks = [], flashes = [], animationId = 0, lastTime = 0, launchAt = 0, side = 0;
+let width, height, rockets = [], sparks = [], flashes = [], animationId = 0, lastTime = 0, launchAt = 0, side = 0, mobileNextCount = 1, mobileDisplayActive = false;
 const palettes = [[202,74,104], [180,76,154], [187,112,15], [141,83,177], [211,88,54]];
 function resize() {
   width = innerWidth; height = innerHeight;
@@ -37,7 +37,20 @@ function frame(time) {
   const dt = Math.min((time - (lastTime || time))/16.67, 2); lastTime=time;
   ctx.clearRect(0,0,width,height);
   if (!launchAt) launchAt=time+700;
-  if (time >= launchAt) { launch(); if(width >= 600 && Math.random()<.3) launch(); launchAt=time+(width < 600 ? 4500+Math.random()*2000 : 1000+Math.random()*650); }
+  if (width < 600) {
+    if (mobileDisplayActive && rockets.length === 0 && sparks.length === 0 && flashes.length === 0) {
+      mobileDisplayActive = false;
+      launchAt = time + 3000;
+    }
+    if (!mobileDisplayActive && time >= launchAt) {
+      for (let i = 0; i < mobileNextCount; i++) launch();
+      mobileNextCount = mobileNextCount === 1 ? 2 : 1;
+      mobileDisplayActive = true;
+    }
+  } else if (time >= launchAt) {
+    launch(); if (Math.random() < .3) launch();
+    launchAt = time + 1000 + Math.random() * 650;
+  }
   for (let i=rockets.length-1;i>=0;i--) {
     const r=rockets[i]; r.trail.push({x:r.x,y:r.y}); if(r.trail.length>18)r.trail.shift();
     r.x+=r.vx*dt; r.y+=r.vy*dt;
@@ -59,7 +72,7 @@ function frame(time) {
   animationId=requestAnimationFrame(frame);
 }
 function syncAnimation() {
-  if(motion.matches || document.hidden) { if(animationId) cancelAnimationFrame(animationId); animationId=0; lastTime=0; rockets=[]; sparks=[]; flashes=[]; ctx.clearRect(0,0,width,height); }
+  if(motion.matches || document.hidden) { if(animationId) cancelAnimationFrame(animationId); animationId=0; lastTime=0; rockets=[]; sparks=[]; flashes=[]; mobileDisplayActive=false; mobileNextCount=1; ctx.clearRect(0,0,width,height); }
   else if(!animationId) { launchAt=0; animationId=requestAnimationFrame(frame); }
 }
 resize(); addEventListener('resize',resize); motion.addEventListener('change',syncAnimation); document.addEventListener('visibilitychange',syncAnimation); syncAnimation();
