@@ -18,16 +18,17 @@ function resize() {
 function launch() {
   const margin = width < 600 ? .13 : .2;
   const x = width * (side++ % 2 ? 1 - margin : margin);
-  const targetY = height * (.15 + Math.random() * .25);
+  const targetY = height * (.10 + Math.random() * .36);
   rockets.push({x, y: height * .82, targetY, vx:(Math.random()-.5)*.2, vy:-6.7 - Math.random()*.6, trail:[]});
 }
 function explode(x,y) {
   const color = palettes[Math.floor(Math.random()*palettes.length)];
-  const count = width < 600 ? 90 : 140;
+  const size = [0.5, 0.8, 1.15, 1.5][Math.floor(Math.random()*4)];
+  const count = Math.round((width < 600 ? 75 : 105) * (.7 + size*.4));
   flashes.push({x, y, life: 1});
   for (let i=0; i<count; i++) {
     const angle = Math.PI * 2 * i / count + (Math.random()-.5)*.12;
-    const speed = (Math.random() < .2 ? .8 : 2.0) + Math.random()*3.2;
+    const speed = ((Math.random() < .2 ? .8 : 2.0) + Math.random()*3.2) * size;
     sparks.push({x,y,px:x,py:y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:1,decay:.005+Math.random()*.006,color, twinkle:Math.random(), trail:[]});
   }
 }
@@ -36,7 +37,7 @@ function frame(time) {
   const dt = Math.min((time - (lastTime || time))/16.67, 2); lastTime=time;
   ctx.clearRect(0,0,width,height);
   if (!launchAt) launchAt=time+2000;
-  if (time >= launchAt) { launch(); launchAt=time+1250+Math.random()*850; }
+  if (time >= launchAt) { launch(); if(Math.random()<.3) launch(); launchAt=time+1200+Math.random()*1000; }
   for (let i=rockets.length-1;i>=0;i--) {
     const r=rockets[i]; r.trail.push({x:r.x,y:r.y}); if(r.trail.length>18)r.trail.shift();
     r.x+=r.vx*dt; r.y+=r.vy*dt;
