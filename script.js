@@ -37,7 +37,7 @@ function frame(time) {
   const dt = Math.min((time - (lastTime || time))/16.67, 2); lastTime=time;
   ctx.clearRect(0,0,width,height);
   if (!launchAt) launchAt=time+700;
-  if (time >= launchAt) { launch(); if(Math.random()<.3) launch(); launchAt=time+1000+Math.random()*650; }
+  if (time >= launchAt) { launch(); if(width >= 600 && Math.random()<.3) launch(); launchAt=time+(width < 600 ? 4500+Math.random()*2000 : 1000+Math.random()*650); }
   for (let i=rockets.length-1;i>=0;i--) {
     const r=rockets[i]; r.trail.push({x:r.x,y:r.y}); if(r.trail.length>18)r.trail.shift();
     r.x+=r.vx*dt; r.y+=r.vy*dt;
