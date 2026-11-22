@@ -1,0 +1,15 @@
+from pathlib import Path
+import json, html, random
+p=Path(__file__).parent
+m=json.loads((p/'messages.json').read_text(encoding='utf-8-sig'))
+random.seed(4)
+flowers=''
+for i in range(35):
+ x=i*32-30+random.randrange(-12,12); y=random.randrange(140,280); s=random.uniform(.65,1.25); c=random.choice(['#f8b3c6','#f3d05a','#f8d46e','#ec8faf'])
+ flowers+=f'<g transform="translate({x} {y}) scale({s})"><path d="M0 290 Q-8 190 0 52 M0 200 Q-50 140 -40 115 Q-4 131 0 178 M0 220 Q40 145 52 150 Q48 190 0 235" fill="#688e64" stroke="#688e64" stroke-width="5"/><path d="M0 65 C-30 58 -32 25 -24 0 Q-12 15 0 4 Q13 15 25 0 C32 30 29 58 0 65Z" fill="{c}" stroke="#d88b83" stroke-width="1.5"/><path d="M0 60 Q-15 34 -12 8 M0 60 Q16 32 13 8" fill="none" stroke="#fff4d4" stroke-opacity=".55" stroke-width="3"/></g>'
+svg=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 520" preserveAspectRatio="xMidYMax slice"><ellipse cx="540" cy="490" rx="620" ry="100" fill="#bfd1a4"/>{flowers}<g transform="translate(790 370)"><ellipse cx="0" cy="65" rx="55" ry="39" fill="#fff8f1"/><ellipse cx="-27" cy="-5" rx="12" ry="50" fill="#fff8f1" transform="rotate(-18 -27 -5)"/><ellipse cx="13" cy="-8" rx="12" ry="52" fill="#fff8f1" transform="rotate(12 13 -8)"/><circle cy="25" r="39" fill="#fff8f1"/><circle cx="-13" cy="22" r="3" fill="#66534e"/><circle cx="13" cy="22" r="3" fill="#66534e"/><ellipse cy="33" rx="4" ry="3" fill="#d9949f"/><circle cx="-23" cy="32" r="6" fill="#f6c5ce"/><circle cx="23" cy="32" r="6" fill="#f6c5ce"/></g></svg>'
+(p/'garden.svg').write_text(svg,encoding='utf-8')
+app=html.escape(m['appreciation']); letter=''.join('<p>'+html.escape(x)+'</p>' for x in m['letter'].split('\n\n'))
+page='''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fce9e9"><title>A little garden for you</title><link rel="stylesheet" href="style.css"></head><body><div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><main><section class="hero"><div class="eyebrow">A LITTLE SOMETHING, JUST FOR YOU</div><div class="heart">♡</div><h1>You make my world <em>bloom.</em></h1><p class="intro">A little garden of happiness, made for my favorite person.</p><a class="scroll" href="#note">Come wander with me <span>↓</span></a><img class="garden" src="garden.svg" alt="A garden of pink and yellow tulips with a little white rabbit"></section><section class="note" id="note"><div class="note-inner reveal"><div class="eyebrow">A NOTE FROM MY HEART</div><h2>Life is sweeter<br><em>with you in it.</em></h2><p class="message">APPRECIATION</p><div class="flourish">✿ &nbsp; ♡ &nbsp; ✿</div><button id="open" aria-expanded="false" aria-controls="letter">A letter for you <span>♡</span></button><div class="letter" id="letter" hidden><div class="letter-top">My love,</div>LETTER<p class="signature">Always yours ♡</p></div></div></section></main><footer>MADE WITH LOVE, FOR YOU &nbsp; ♡</footer><script src="script.js"></script></body></html>'''.replace('APPRECIATION',app).replace('LETTER',letter)
+(p/'index.html').write_text(page,encoding='utf-8')
+
